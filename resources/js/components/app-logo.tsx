@@ -5,7 +5,7 @@ export default function AppLogo() {
         <>
             <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground overflow-hidden">
                 <img 
-                    src="/public/logo.png"
+                    src="/logo.png"
                     alt="Trucking 360 Logo"
                     className="size-8 object-contain"
                 />
