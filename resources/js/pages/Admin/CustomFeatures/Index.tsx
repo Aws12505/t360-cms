@@ -3,6 +3,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import AppLayout              from '@/layouts/app-layout';
 import { Button }             from '@/components/ui/button';
 import { type BreadcrumbItem } from '@/types';
+import FlashMessage from '@/components/flash-message'; // Add this import
 
 interface CustomFeature {
   id: number;
@@ -32,6 +33,8 @@ export default function CustomFeaturesIndex({ features }: Props) {
       <Head title="Custom Features" />
 
       <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">
+              <FlashMessage />
+        
         <div className="relative w-full overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border bg-background p-8">
           
           <div className="flex items-center justify-between mb-6">

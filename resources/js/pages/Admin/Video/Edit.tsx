@@ -6,6 +6,7 @@ import { Label }             from '@/components/ui/label';
 import { Input }             from '@/components/ui/input';
 import QuillEditor           from '@/components/QuillEditor';       // HTML editor
 import { type BreadcrumbItem } from '@/types';
+import FlashMessage from '@/components/flash-message'; // Add this import
 
 interface Props {
   video: {
@@ -37,6 +38,8 @@ export default function VideoEdit({ video }: Props) {
       <Head title="Video Section" />
 
       <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">
+             <FlashMessage />
+       
         <div className="relative w-full max-w-4xl mx-auto overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border bg-background p-8">
           <form onSubmit={submit} className="space-y-8">
 

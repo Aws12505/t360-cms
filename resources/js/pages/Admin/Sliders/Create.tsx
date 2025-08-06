@@ -14,10 +14,11 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function SliderCreate() {
-  const { data, setData, post, processing, errors } = useForm({
+  const { data, setData, post, processing, errors, progress } = useForm({
     title:       '',
     description: '',
     features:    '',
+    image:       null as File | null,
     order:       0,
   });
 
@@ -64,6 +65,17 @@ export default function SliderCreate() {
               {errors.features && <p className="text-sm text-red-500">{errors.features}</p>}
             </div>
 
+            {/* Image Upload with same styling as Hero */}
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="image">Image (optional)</Label>
+              <Input
+                type="file"
+                id="image"
+                onChange={e => setData('image', e.target.files?.[0] ?? null)}
+              />
+              {errors.image && <p className="text-sm text-red-500">{errors.image}</p>}
+            </div>
+
             <div className="flex flex-col gap-2">
               <Label>Order</Label>
               <Input
@@ -74,6 +86,15 @@ export default function SliderCreate() {
               />
               {errors.order && <p className="text-sm text-red-500">{errors.order}</p>}
             </div>
+
+            {progress && (
+              <div className="w-full rounded bg-neutral-200 dark:bg-neutral-700">
+                <div
+                  className="h-2 rounded bg-primary"
+                  style={{ width: `${progress.percentage}%` }}
+                />
+              </div>
+            )}
 
             <div className="flex gap-4">
               <Button type="submit" disabled={processing}>

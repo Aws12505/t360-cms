@@ -4,6 +4,7 @@ import AppLayout              from '@/layouts/app-layout';
 import { Button }             from '@/components/ui/button';
 import { Badge }              from '@/components/ui/badge';
 import { type BreadcrumbItem } from '@/types';
+import FlashMessage from '@/components/flash-message'; // Add this import
 
 interface PricingPlan {
   id: number;
@@ -14,6 +15,7 @@ interface PricingPlan {
   features: string | null;
   is_customizable: boolean;
   is_best_value: boolean;
+  order: number;
   created_at: string;
 }
 
@@ -37,6 +39,7 @@ export default function PricingPlansIndex({ plans }: Props) {
       <Head title="Pricing Plans" />
 
       <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">
+             <FlashMessage />
         <div className="relative w-full overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border bg-background p-8">
           
           <div className="flex items-center justify-between mb-6">

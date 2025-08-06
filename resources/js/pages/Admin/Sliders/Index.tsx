@@ -3,12 +3,15 @@ import { Head, Link, router } from '@inertiajs/react';
 import AppLayout              from '@/layouts/app-layout';
 import { Button }             from '@/components/ui/button';
 import { type BreadcrumbItem } from '@/types';
+import FlashMessage from '@/components/flash-message'; // Add this import
 
 interface Slider {
   id: number;
   title: string;
   description: string | null;
   features: string | null;
+  image: string | null;
+  image_url: string | null;
   order: number;
   created_at: string;
 }
@@ -33,6 +36,8 @@ export default function SlidersIndex({ sliders }: Props) {
       <Head title="Sliders" />
 
       <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">
+              <FlashMessage />
+        
         <div className="relative w-full overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border bg-background p-8">
           
           <div className="flex items-center justify-between mb-6">
@@ -51,9 +56,20 @@ export default function SlidersIndex({ sliders }: Props) {
               sliders.map((slider) => (
                 <div 
                   key={slider.id} 
-                  className="p-4 border rounded-lg bg-card"
+                  className="p-4 border rounded-lg bg-card flex gap-4"
                 >
-                  <div className="flex items-start justify-between">
+                  {/* Image thumbnail */}
+                  {slider.image_url && (
+                    <div className="flex-shrink-0">
+                      <img
+                        src={slider.image_url}
+                        alt={slider.title}
+                        className="w-20 h-20 object-cover rounded-md border"
+                      />
+                    </div>
+                  )}
+                  
+                  <div className="flex items-start justify-between flex-1">
                     <div className="flex-1">
                       <h3 className="font-semibold">{slider.title}</h3>
                       {slider.features && (
@@ -63,6 +79,7 @@ export default function SlidersIndex({ sliders }: Props) {
                       )}
                       <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
                         <span>Order: {slider.order}</span>
+                        {slider.image && <span>• Has Image</span>}
                       </div>
                     </div>
                     <div className="flex gap-2">

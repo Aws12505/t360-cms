@@ -73,6 +73,7 @@ class WebsiteController extends Controller
                             'description' => $slider->description,
                             'features' => $slider->features,
                             'order' => $slider->order,
+                            'image' => $slider->image,
                         ];
                     }),
                     'faqs' => $faqs->map(function ($faq) {
@@ -125,6 +126,7 @@ class WebsiteController extends Controller
                     'features' => $plan->features, // small text summary
                     'is_customizable' => $plan->is_customizable,
                     'is_best_value' => $plan->is_best_value,
+                    'order' => $plan->order,
                 ];
 
                 if ($plan->is_customizable) {

@@ -15,12 +15,15 @@ class PricingPlan extends Model
         'features',
         'is_customizable',
         'is_best_value',
+        'order',
     ];
 
     protected $casts = [
         'total_value' => 'decimal:2',
         'is_customizable' => 'boolean',
         'is_best_value' => 'boolean',
+        'order' => 'integer',
+
     ];
 
     public function scopeBestValue($query)
@@ -32,7 +35,10 @@ class PricingPlan extends Model
     {
         return $query->where('is_customizable', true);
     }
-
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('order');
+    }
     public function scopeFixed($query)
     {
         return $query->where('is_customizable', false);

@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import QuillEditor from '@/components/QuillEditor';
+import QuillEditorAdvanced from '@/components/QuillEditorAdvanced';
 import { type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -86,9 +86,11 @@ export default function ArticlesCreate() {
 
             <div className="flex flex-col gap-2">
               <Label>Content</Label>
-              <QuillEditor
+              <QuillEditorAdvanced
                 value={data.content}
                 onChange={content => setData('content', content)}
+                placeholder="Write your article content here..."
+                height="500px"
               />
               {errors.content && <p className="text-sm text-red-500">{errors.content}</p>}
             </div>

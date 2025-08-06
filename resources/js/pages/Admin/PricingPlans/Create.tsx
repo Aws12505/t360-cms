@@ -1,3 +1,4 @@
+// resources/js/Pages/Admin/PricingPlans/Create.tsx
 import { Head, useForm } from '@inertiajs/react';
 import AppLayout         from '@/layouts/app-layout';
 import { Button }        from '@/components/ui/button';
@@ -34,6 +35,7 @@ export default function PricingPlanCreate({ allFeatures }: Props) {
     features:        '',
     is_customizable: false,
     is_best_value:   false,
+    order:           0,
     feature_ids:     [] as number[],
   });
 
@@ -113,6 +115,18 @@ export default function PricingPlanCreate({ allFeatures }: Props) {
                 placeholder="Brief feature description..."
               />
               {errors.features && <p className="text-sm text-red-500">{errors.features}</p>}
+            </div>
+
+            {/* Order */}
+            <div className="flex flex-col gap-2">
+              <Label>Order</Label>
+              <Input
+                type="number"
+                value={data.order}
+                onChange={e => setData('order', parseInt(e.target.value) || 0)}
+                min="0"
+              />
+              {errors.order && <p className="text-sm text-red-500">{errors.order}</p>}
             </div>
 
             {/* Flags */}

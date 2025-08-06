@@ -6,6 +6,7 @@ import { Label }         from '@/components/ui/label';
 import { Input }         from '@/components/ui/input';
 import { Textarea }      from '@/components/ui/textarea';
 import { type BreadcrumbItem } from '@/types';
+import FlashMessage from '@/components/flash-message'; // Add this import
 
 interface Props {
   booking: {
@@ -35,6 +36,7 @@ export default function PricingBookingEdit({ booking }: Props) {
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Pricing Booking" />
       <div className="flex flex-col p-4 gap-4 h-full">
+              <FlashMessage />
         <div className="border rounded-xl p-8 bg-background max-w-4xl mx-auto space-y-8">
           <form onSubmit={submit} className="space-y-6">
 

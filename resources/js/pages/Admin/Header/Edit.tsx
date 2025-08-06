@@ -5,6 +5,7 @@ import { Button }         from '@/components/ui/button';
 import { Label }          from '@/components/ui/label';
 import { Input }          from '@/components/ui/input';
 import { type BreadcrumbItem } from '@/types';
+import FlashMessage from '@/components/flash-message'; // Add this import
 
 interface Props {
   header: {
@@ -42,6 +43,7 @@ export default function HeaderEdit({ header }: Props) {
       <Head title="Header Settings" />
 
       <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">
+      <FlashMessage />
 
         {/* Center the form card and let it grow to a comfortable width */}
         <div className="relative w-full max-w-4xl mx-auto overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border bg-background p-8">

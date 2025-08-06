@@ -23,8 +23,8 @@ class MeetingSectionController extends Controller
             'title'       => 'required|string|max:255',
             'description' => 'required|string',
             'btn_name'    => 'required|string|max:255',
-            'btn_link'    => 'required|url',
-            'image'       => 'nullable|image|max:2048',
+            'btn_link'    => 'required|string',
+            'image'       => 'nullable|image|max:20480',
         ]);
 
         $meeting = MeetingSection::instance();

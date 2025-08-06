@@ -7,6 +7,7 @@ import { Input }             from '@/components/ui/input';
 import { Textarea }          from '@/components/ui/textarea';
 import { type BreadcrumbItem } from '@/types';
 import { useState } from 'react';
+import FlashMessage from '@/components/flash-message'; // Add this import
 
 interface AnimatedText {
     id?: number;
@@ -69,6 +70,7 @@ export default function HeroEdit({ hero }: Props) {
       <Head title="Hero Section" />
 
       <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">
+              <FlashMessage />
         <div className="relative w-full max-w-4xl mx-auto overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border bg-background p-8">
           <form onSubmit={submit} className="space-y-8">
 

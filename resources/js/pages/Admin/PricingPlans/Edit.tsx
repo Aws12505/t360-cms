@@ -1,3 +1,4 @@
+// resources/js/Pages/Admin/PricingPlans/Edit.tsx
 import { Head, useForm }  from '@inertiajs/react';
 import AppLayout          from '@/layouts/app-layout';
 import { Button }         from '@/components/ui/button';
@@ -23,6 +24,7 @@ interface PlanPayload {
   features: string | null;
   is_customizable: boolean;
   is_best_value: boolean;
+  order: number;
   custom_features?: Feature[] | null;
 }
 
@@ -50,6 +52,7 @@ export default function PricingPlanEdit({ plan, allFeatures }: Props) {
     features:        plan.features ?? '',
     is_customizable: plan.is_customizable,
     is_best_value:   plan.is_best_value,
+    order:           plan.order,
     feature_ids:     attachedIds,
   });
 
@@ -129,6 +132,18 @@ export default function PricingPlanEdit({ plan, allFeatures }: Props) {
                 placeholder="Brief feature description..."
               />
               {errors.features && <p className="text-sm text-red-500">{errors.features}</p>}
+            </div>
+
+            {/* Order */}
+            <div className="flex flex-col gap-2">
+              <Label>Order</Label>
+              <Input
+                type="number"
+                value={data.order}
+                onChange={e => setData('order', parseInt(e.target.value) || 0)}
+                min="0"
+              />
+              {errors.order && <p className="text-sm text-red-500">{errors.order}</p>}
             </div>
 
             {/* Flags */}

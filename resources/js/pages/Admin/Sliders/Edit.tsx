@@ -14,6 +14,8 @@ interface Props {
     title: string;
     description: string | null;
     features: string | null;
+    image: string | null;
+    image_url: string | null;
     order: number;
   };
 }
@@ -24,16 +26,18 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function SliderEdit({ slider }: Props) {
-  const { data, setData, put, processing, errors } = useForm({
+  const { data, setData, post, processing, errors, progress } = useForm({
+    _method:     'PUT',
     title:       slider.title,
     description: slider.description ?? '',
     features:    slider.features ?? '',
+    image:       null as File | null,
     order:       slider.order,
   });
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    put(route('admin.sliders.update', slider.id));
+    post(route('admin.sliders.update', slider.id));
   };
 
   return (
@@ -74,6 +78,29 @@ export default function SliderEdit({ slider }: Props) {
               {errors.features && <p className="text-sm text-red-500">{errors.features}</p>}
             </div>
 
+            {/* Image Upload with same styling as Hero */}
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="image">Image (optional)</Label>
+              <Input
+                type="file"
+                id="image"
+                onChange={e => setData('image', e.target.files?.[0] ?? null)}
+              />
+              {errors.image && <p className="text-sm text-red-500">{errors.image}</p>}
+              
+              {/* Show current image if exists */}
+              {slider.image_url && (
+                <div className="mt-2">
+                  <p className="text-sm text-gray-600 mb-2">Current Image:</p>
+                  <img
+                    src={slider.image_url}
+                    alt={slider.title}
+                    className="max-w-xs max-h-48 object-cover rounded-md border"
+                  />
+                </div>
+              )}
+            </div>
+
             <div className="flex flex-col gap-2">
               <Label>Order</Label>
               <Input
@@ -84,6 +111,15 @@ export default function SliderEdit({ slider }: Props) {
               />
               {errors.order && <p className="text-sm text-red-500">{errors.order}</p>}
             </div>
+
+            {progress && (
+              <div className="w-full rounded bg-neutral-200 dark:bg-neutral-700">
+                <div
+                  className="h-2 rounded bg-primary"
+                  style={{ width: `${progress.percentage}%` }}
+                />
+              </div>
+            )}
 
             <div className="flex gap-4">
               <Button type="submit" disabled={processing}>

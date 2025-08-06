@@ -35,11 +35,21 @@ class PricingTableController extends Controller
     }
 
     public function edit(PricingTable $pricingTable)
-    {
-        return Inertia::render('Admin/PricingTables/Edit', [
-            'table' => $pricingTable->load('contents')
-        ]);
-    }
+{
+    $safetyContents = $pricingTable->contents()
+        ->where('is_safety', true)
+        ->paginate(10, ['*'], 'safety_page');
+    
+    $regularContents = $pricingTable->contents()
+        ->where('is_safety', false)
+        ->paginate(10, ['*'], 'regular_page');
+
+    return Inertia::render('Admin/PricingTables/Edit', [
+        'table' => $pricingTable->only(['id', 'title']),
+        'safetyContents' => $safetyContents,
+        'regularContents' => $regularContents,
+    ]);
+}
 
     public function update(Request $request, PricingTable $pricingTable)
     {
