@@ -17,7 +17,6 @@ interface Props {
 }
 
 const breadcrumbs:BreadcrumbItem[]=[
-  {title:'Dashboard',href:'/dashboard'},
   {title:'Pricing Booking',href:'/admin/pricing-booking'},
 ];
 

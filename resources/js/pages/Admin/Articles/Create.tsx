@@ -10,7 +10,6 @@ import QuillEditor from '@/components/QuillEditor';
 import { type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
-  { title: 'Dashboard', href: '/dashboard' },
   { title: 'Articles', href: '/admin/articles' },
   { title: 'Create', href: '/admin/articles/create' },
 ];

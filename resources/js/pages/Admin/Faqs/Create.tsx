@@ -13,7 +13,6 @@ interface Props {
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-  { title: 'Dashboard', href: '/dashboard' },
   { title: 'FAQs',      href: '/admin/faqs' },
   { title: 'Create',    href: '/admin/faqs/create' },
 ];

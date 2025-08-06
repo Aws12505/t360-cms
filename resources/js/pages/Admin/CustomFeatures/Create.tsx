@@ -7,7 +7,6 @@ import { Input }              from '@/components/ui/input';
 import { type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
-  { title: 'Dashboard',       href: '/dashboard' },
   { title: 'Pricing Plans',   href: '/admin/pricing-plans' },
   { title: 'Custom Features', href: '/admin/custom-features' },
   { title: 'Create',          href: '/admin/custom-features/create' },
