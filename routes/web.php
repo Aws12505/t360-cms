@@ -16,8 +16,12 @@ use App\Http\Controllers\Admin\PricingTableController;
 use App\Http\Controllers\Admin\PricingBookingController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\ArticleImageController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
+    if (Auth::check()) {
+        return redirect('/admin/header');
+    }
     return redirect()->route('login');
 })->name('home');
 
