@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -14,20 +15,90 @@ use App\Models\PricingPlan;
 use App\Models\PricingTable;
 use App\Models\PricingBooking;
 use App\Models\Article;
+use Illuminate\Support\Str;
 
 class WebsiteController extends Controller
 {
+    /**
+     * Make a full URL to a file stored under /storage using APP_URL.
+     */
+    private function storageUrl(?string $path): ?string
+    {
+        if (!$path) {
+            return null;
+        }
+
+        $clean = ltrim($path, '/');
+
+        // Already absolute? leave it as-is.
+        if (Str::startsWith($clean, ['http://', 'https://'])) {
+            return $path;
+        }
+
+        // If it already begins with "storage/", don't double it.
+        if (Str::startsWith($clean, 'storage/')) {
+            return asset($clean);
+        }
+
+        return asset('storage/' . $clean);
+    }
+
+    /**
+     * Recursively walk an array (or model->toArray()) and append APP_URL/storage
+     * to keys that look like media fields (image/logo/icon/video/file/path/url/thumbnail/background/banner).
+     */
+    private function transformMedia($payload)
+    {
+        if (is_null($payload)) {
+            return $payload;
+        }
+
+        if (is_array($payload)) {
+            foreach ($payload as $key => $value) {
+                if (is_array($value)) {
+                    $payload[$key] = $this->transformMedia($value);
+                    continue;
+                }
+
+                // Only attempt to transform string-ish fields
+                if (is_string($value)) {
+                    $keyLower = strtolower((string) $key);
+
+                    $looksLikeMediaKey =
+                        Str::contains($keyLower, ['image', 'video', 'logo', 'icon', 'favicon', 'thumbnail', 'banner', 'background'])
+                        || Str::endsWith($keyLower, ['_file', '_path', '_url']);
+
+                    if ($looksLikeMediaKey) {
+                        $payload[$key] = $this->storageUrl($value);
+                    }
+                }
+            }
+
+            return $payload;
+        }
+
+        // If it's a model/collection, try toArray() if available
+        if (is_object($payload) && method_exists($payload, 'toArray')) {
+            return $this->transformMedia($payload->toArray());
+        }
+
+        return $payload;
+    }
+
     /**
      * General data - Header & Footer
      */
     public function general()
     {
         try {
+            $header = HeaderSetting::first();
+            $footer = FooterSetting::first();
+
             return response()->json([
                 'success' => true,
                 'data' => [
-                    'header' => HeaderSetting::first(),
-                    'footer' => FooterSetting::first(),
+                    'header' => $this->transformMedia($header ? $header->toArray() : null),
+                    'footer' => $this->transformMedia($footer ? $footer->toArray() : null),
                 ]
             ]);
         } catch (\Exception $e) {
@@ -58,13 +129,13 @@ class WebsiteController extends Controller
                     'hero' => [
                         'title' => $hero?->title,
                         'description' => $hero?->description,
-                        'image' => $hero?->image,
+                        'image' => $this->storageUrl($hero?->image),
                         'animated_texts' => $hero?->animatedTexts?->pluck('text') ?? [],
                     ],
                     'video' => [
                         'title' => $video?->title,
                         'description' => $video?->description,
-                        'video' => $video?->video,
+                        'video' => $this->storageUrl($video?->video),
                     ],
                     'sliders' => $sliders->map(function ($slider) {
                         return [
@@ -73,7 +144,7 @@ class WebsiteController extends Controller
                             'description' => $slider->description,
                             'features' => $slider->features,
                             'order' => $slider->order,
-                            'image' => $slider->image,
+                            'image' => $this->storageUrl($slider->image),
                         ];
                     }),
                     'faqs' => $faqs->map(function ($faq) {
@@ -89,7 +160,7 @@ class WebsiteController extends Controller
                         'description' => $meeting?->description,
                         'btn_name' => $meeting?->btn_name,
                         'btn_link' => $meeting?->btn_link,
-                        'image' => $meeting?->image,
+                        'image' => $this->storageUrl($meeting?->image),
                     ],
                     'form' => [
                         'title' => $form?->title,
@@ -213,13 +284,13 @@ class WebsiteController extends Controller
                             'id' => $article->id,
                             'title' => $article->title,
                             'description' => $article->description,
-                            'featured_image' => $article->featured_image ? asset('storage/' . $article->featured_image) : null,
+                            'featured_image' => $this->storageUrl($article->featured_image),
                             'custom_date' => $article->custom_date?->format('Y-m-d'),
                             'content' => $article->content,
                             'images' => $article->images->map(function ($image) {
                                 return [
                                     'id' => $image->id,
-                                    'image_url' => asset('storage/' . $image->image_path),
+                                    'image_url' => $this->storageUrl($image->image_path),
                                     'alt_text' => $image->alt_text,
                                 ];
                             }),
