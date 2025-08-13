@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import QuillEditorAdvanced from '@/components/QuillEditorAdvanced';
 import { type BreadcrumbItem } from '@/types';
+import { useState } from 'react';
 
 interface ArticleImage {
   id: number;
@@ -34,6 +35,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function ArticlesEdit({ article }: Props) {
+  const [copiedImageId, setCopiedImageId] = useState<number | null>(null);
+  const [copiedFeatured, setCopiedFeatured] = useState(false);
+
   const { data, setData, post, processing, errors } = useForm({
     _method: 'put',
     title: article.title,
@@ -58,6 +62,46 @@ export default function ArticlesEdit({ article }: Props) {
   const deleteImage = (imageId: number) => {
     if (confirm('Are you sure you want to delete this image?')) {
       router.delete(route('admin.article-images.destroy', imageId));
+    }
+  };
+
+  const copyImageUrl = async (imagePath: string, imageId: number) => {
+    try {
+      const fullUrl = `${window.location.origin}/storage/${imagePath}`;
+      await navigator.clipboard.writeText(fullUrl);
+      setCopiedImageId(imageId);
+      setTimeout(() => setCopiedImageId(null), 2000);
+    } catch (err) {
+      console.error('Failed to copy image URL:', err);
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = `${window.location.origin}/storage/${imagePath}`;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setCopiedImageId(imageId);
+      setTimeout(() => setCopiedImageId(null), 2000);
+    }
+  };
+
+  const copyFeaturedImageUrl = async (imagePath: string) => {
+    try {
+      const fullUrl = `${window.location.origin}/storage/${imagePath}`;
+      await navigator.clipboard.writeText(fullUrl);
+      setCopiedFeatured(true);
+      setTimeout(() => setCopiedFeatured(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy featured image URL:', err);
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = `${window.location.origin}/storage/${imagePath}`;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setCopiedFeatured(true);
+      setTimeout(() => setCopiedFeatured(false), 2000);
     }
   };
 
@@ -100,11 +144,31 @@ export default function ArticlesEdit({ article }: Props) {
                 {article.featured_image && (
                   <div className="mt-2">
                     <p className="text-sm text-muted-foreground mb-2">Current image:</p>
-                    <img
-                      src={`/storage/${article.featured_image}`}
-                      alt="Current featured"
-                      className="w-32 h-32 object-cover rounded"
-                    />
+                    <div className="relative group">
+                      <img
+                        src={`/storage/${article.featured_image}`}
+                        alt="Current featured"
+                        className="w-32 h-32 object-cover rounded"
+                      />
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        size="sm"
+                        className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={() => copyFeaturedImageUrl(article.featured_image!)}
+                      >
+                        {copiedFeatured ? (
+                          <span className="text-xs">✓</span>
+                        ) : (
+                          <span className="text-xs">📋</span>
+                        )}
+                      </Button>
+                    </div>
+                    {copiedFeatured && (
+                      <p className="text-xs text-green-600 mt-1">
+                        Featured image URL copied to clipboard!
+                      </p>
+                    )}
                   </div>
                 )}
                 {errors.featured_image && <p className="text-sm text-red-500">{errors.featured_image}</p>}
@@ -181,14 +245,46 @@ export default function ArticlesEdit({ article }: Props) {
                       alt={image.alt_text || 'Article image'}
                       className="w-full h-32 object-cover rounded"
                     />
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={() => deleteImage(image.id)}
-                    >
-                      ×
-                    </Button>
+                    
+                    {/* Action Buttons Container */}
+                    <div className="absolute top-2 right-2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {/* Copy Button */}
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        size="sm"
+                        className="w-8 h-8 p-0"
+                        onClick={() => copyImageUrl(image.image_path, image.id)}
+                        title="Copy image URL"
+                      >
+                        {copiedImageId === image.id ? (
+                          <span className="text-xs">✓</span>
+                        ) : (
+                          <span className="text-xs">📋</span>
+                        )}
+                      </Button>
+                      
+                      {/* Delete Button */}
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        className="w-8 h-8 p-0"
+                        onClick={() => deleteImage(image.id)}
+                        title="Delete image"
+                      >
+                        <span className="text-xs">×</span>
+                      </Button>
+                    </div>
+
+                    {/* Copy Success Message */}
+                    {copiedImageId === image.id && (
+                      <div className="absolute bottom-2 left-2 right-2">
+                        <p className="text-xs text-green-600 bg-white/90 rounded px-2 py-1 text-center">
+                          URL copied!
+                        </p>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
