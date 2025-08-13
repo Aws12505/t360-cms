@@ -198,6 +198,12 @@ class WebsiteController extends Controller
                     'is_customizable' => $plan->is_customizable,
                     'is_best_value' => $plan->is_best_value,
                     'order' => $plan->order,
+                    // New fields added
+                    'button_link' => $plan->button_link,
+                    'button_text' => $plan->button_text,
+                    'highlighted_text' => $plan->highlighted_text,
+                    'button_bg_color' => $plan->button_bg_color,
+                    'total_value_bg_color' => $plan->total_value_bg_color,
                 ];
 
                 if ($plan->is_customizable) {
