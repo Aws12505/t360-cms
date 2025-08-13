@@ -51,7 +51,6 @@ class PricingPlanController extends Controller
             $request->validate(['total_value' => 'required|numeric|min:0']);
         } else {
             $validated['total_value'] = null;
-            $validated['per_text']    = null;
         }
 
         if ($validated['is_best_value'] ?? false) {

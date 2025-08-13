@@ -75,8 +75,8 @@ export default function PricingPlanCreate({ allFeatures }: Props) {
             </div>
 
             {/* Price fields */}
-            {!data.is_customizable && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 {!data.is_customizable && (
                 <div className="flex flex-col gap-2">
                   <Label>Total Value</Label>
                   <Input
@@ -87,7 +87,7 @@ export default function PricingPlanCreate({ allFeatures }: Props) {
                   />
                   {errors.total_value && <p className="text-sm text-red-500">{errors.total_value}</p>}
                 </div>
-
+ )}
                 <div className="flex flex-col gap-2">
                   <Label>Per Text</Label>
                   <Input
@@ -98,7 +98,6 @@ export default function PricingPlanCreate({ allFeatures }: Props) {
                   {errors.per_text && <p className="text-sm text-red-500">{errors.per_text}</p>}
                 </div>
               </div>
-            )}
 
             {/* Color fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

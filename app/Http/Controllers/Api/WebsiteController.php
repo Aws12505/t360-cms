@@ -209,7 +209,7 @@ class WebsiteController extends Controller
                 if ($plan->is_customizable) {
                     // Customizable plan - show features with individual prices
                     $planData['total_value'] = null;
-                    $planData['per_text'] = null;
+                    $planData['per_text'] = $plan->per_text;
                     $planData['custom_features'] = $plan->customFeatures->map(function ($feature) {
                         return [
                             'id' => $feature->id,
