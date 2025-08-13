@@ -46,7 +46,7 @@ const QuillEditorAdvanced: React.FC<QuillEditorAdvancedProps> = ({
             // Lists
             [{ 'list': 'ordered'}, { 'list': 'bullet' }],
             
-            // Links and media
+            // Links and media - Updated to include both image options
             ['link', 'image', 'video'],
             
             // Block formatting
@@ -121,25 +121,58 @@ const QuillEditorAdvanced: React.FC<QuillEditorAdvancedProps> = ({
       // Custom handlers
       const toolbar = quillRef.current.getModule('toolbar');
       
+      // Enhanced image handler with both upload and URL options
       toolbar.addHandler('image', () => {
-        const input = document.createElement('input');
-        input.setAttribute('type', 'file');
-        input.setAttribute('accept', 'image/*');
-        input.click();
+        const imageChoice = prompt(
+          'Choose an option:\n1. Type "upload" to upload an image file\n2. Type "url" to insert an image URL\n3. Or paste/type the image URL directly'
+        );
 
-        input.onchange = () => {
-          const file = input.files?.[0];
-          if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              const range = quillRef.current?.getSelection(true);
-              if (range) {
-                quillRef.current?.insertEmbed(range.index, 'image', e.target?.result);
-              }
-            };
-            reader.readAsDataURL(file);
+        if (!imageChoice) return;
+
+        const choice = imageChoice.toLowerCase().trim();
+
+        if (choice === 'upload') {
+          // File upload option
+          const input = document.createElement('input');
+          input.setAttribute('type', 'file');
+          input.setAttribute('accept', 'image/*');
+          input.click();
+
+          input.onchange = () => {
+            const file = input.files?.[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                const range = quillRef.current?.getSelection(true);
+                if (range) {
+                  quillRef.current?.insertEmbed(range.index, 'image', e.target?.result);
+                }
+              };
+              reader.readAsDataURL(file);
+            }
+          };
+        } else if (choice === 'url') {
+          // URL input option
+          const url = prompt('Enter the image URL:');
+          if (url && isValidImageUrl(url)) {
+            const range = quillRef.current?.getSelection(true);
+            if (range) {
+              quillRef.current?.insertEmbed(range.index, 'image', url);
+            }
+          } else if (url) {
+            alert('Please enter a valid image URL (must end with .jpg, .jpeg, .png, .gif, .webp, or .svg)');
           }
-        };
+        } else {
+          // Direct URL input (backward compatibility)
+          if (isValidImageUrl(choice)) {
+            const range = quillRef.current?.getSelection(true);
+            if (range) {
+              quillRef.current?.insertEmbed(range.index, 'image', choice);
+            }
+          } else {
+            alert('Please enter a valid image URL or use "upload" for file upload');
+          }
+        }
       });
 
       toolbar.addHandler('video', () => {
@@ -186,6 +219,21 @@ const QuillEditorAdvanced: React.FC<QuillEditorAdvancedProps> = ({
     }
   }, [value]);
 
+  // Helper function to validate image URLs
+  const isValidImageUrl = (url: string): boolean => {
+    try {
+      const urlObj = new URL(url);
+      const pathname = urlObj.pathname.toLowerCase();
+      return /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(pathname) || 
+             url.includes('data:image/') ||
+             url.includes('blob:') ||
+             // Allow common image hosting domains
+             /\.(githubusercontent|imgur|cloudinary|unsplash|pexels)\./.test(urlObj.hostname);
+    } catch {
+      return false;
+    }
+  };
+
   return (
     <div className={className}>
       <div 
@@ -228,6 +276,14 @@ const QuillEditorAdvanced: React.FC<QuillEditorAdvancedProps> = ({
         
         .ql-editor:focus {
           outline: none;
+        }
+
+        /* Image styling within editor */
+        .ql-editor img {
+          max-width: 100%;
+          height: auto;
+          border-radius: 4px;
+          margin: 8px 0;
         }
       `}</style>
     </div>
