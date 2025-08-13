@@ -86,6 +86,29 @@ class WebsiteController extends Controller
     }
 
     /**
+     * Recursively round all numbers (ints, floats, numeric strings) in the payload.
+     */
+    private function roundNumbers($payload)
+    {
+        if (is_array($payload)) {
+            foreach ($payload as $key => $value) {
+                $payload[$key] = $this->roundNumbers($value);
+            }
+            return $payload;
+        }
+
+        if (is_object($payload) && method_exists($payload, 'toArray')) {
+            return $this->roundNumbers($payload->toArray());
+        }
+
+        if (is_numeric($payload)) {
+            return round((float) $payload);
+        }
+
+        return $payload;
+    }
+
+    /**
      * General data - Header & Footer
      */
     public function general()
@@ -94,12 +117,14 @@ class WebsiteController extends Controller
             $header = HeaderSetting::first();
             $footer = FooterSetting::first();
 
+            $data = [
+                'header' => $this->transformMedia($header ? $header->toArray() : null),
+                'footer' => $this->transformMedia($footer ? $footer->toArray() : null),
+            ];
+
             return response()->json([
                 'success' => true,
-                'data' => [
-                    'header' => $this->transformMedia($header ? $header->toArray() : null),
-                    'footer' => $this->transformMedia($footer ? $footer->toArray() : null),
-                ]
+                'data' => $this->roundNumbers($data),
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -123,50 +148,52 @@ class WebsiteController extends Controller
             $meeting = MeetingSection::first();
             $form = FormSection::first();
 
+            $data = [
+                'hero' => [
+                    'title' => $hero?->title,
+                    'description' => $hero?->description,
+                    'image' => $this->storageUrl($hero?->image),
+                    'animated_texts' => $hero?->animatedTexts?->pluck('text') ?? [],
+                ],
+                'video' => [
+                    'title' => $video?->title,
+                    'description' => $video?->description,
+                    'video' => $this->storageUrl($video?->video),
+                ],
+                'sliders' => $sliders->map(function ($slider) {
+                    return [
+                        'id' => $slider->id,
+                        'title' => $slider->title,
+                        'description' => $slider->description,
+                        'features' => $slider->features,
+                        'order' => $slider->order,
+                        'image' => $this->storageUrl($slider->image),
+                    ];
+                }),
+                'faqs' => $faqs->map(function ($faq) {
+                    return [
+                        'id' => $faq->id,
+                        'title' => $faq->title,
+                        'description' => $faq->description,
+                        'order' => $faq->order,
+                    ];
+                }),
+                'meeting' => [
+                    'title' => $meeting?->title,
+                    'description' => $meeting?->description,
+                    'btn_name' => $meeting?->btn_name,
+                    'btn_link' => $meeting?->btn_link,
+                    'image' => $this->storageUrl($meeting?->image),
+                ],
+                'form' => [
+                    'title' => $form?->title,
+                    'description' => $form?->description,
+                ],
+            ];
+
             return response()->json([
                 'success' => true,
-                'data' => [
-                    'hero' => [
-                        'title' => $hero?->title,
-                        'description' => $hero?->description,
-                        'image' => $this->storageUrl($hero?->image),
-                        'animated_texts' => $hero?->animatedTexts?->pluck('text') ?? [],
-                    ],
-                    'video' => [
-                        'title' => $video?->title,
-                        'description' => $video?->description,
-                        'video' => $this->storageUrl($video?->video),
-                    ],
-                    'sliders' => $sliders->map(function ($slider) {
-                        return [
-                            'id' => $slider->id,
-                            'title' => $slider->title,
-                            'description' => $slider->description,
-                            'features' => $slider->features,
-                            'order' => $slider->order,
-                            'image' => $this->storageUrl($slider->image),
-                        ];
-                    }),
-                    'faqs' => $faqs->map(function ($faq) {
-                        return [
-                            'id' => $faq->id,
-                            'title' => $faq->title,
-                            'description' => $faq->description,
-                            'order' => $faq->order,
-                        ];
-                    }),
-                    'meeting' => [
-                        'title' => $meeting?->title,
-                        'description' => $meeting?->description,
-                        'btn_name' => $meeting?->btn_name,
-                        'btn_link' => $meeting?->btn_link,
-                        'image' => $this->storageUrl($meeting?->image),
-                    ],
-                    'form' => [
-                        'title' => $form?->title,
-                        'description' => $form?->description,
-                    ],
-                ]
+                'data' => $this->roundNumbers($data),
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -227,39 +254,41 @@ class WebsiteController extends Controller
                 return $planData;
             });
 
+            $data = [
+                'plans' => $formattedPlans,
+                'tables' => $tables->map(function ($table) {
+                    return [
+                        'id' => $table->id,
+                        'title' => $table->title,
+                        'contents' => $table->contents->map(function ($content) {
+                            return [
+                                'id' => $content->id,
+                                'service_name' => $content->service_name,
+                                'description' => $content->description,
+                                'is_safety' => $content->is_safety,
+                            ];
+                        }),
+                    ];
+                }),
+                'faqs' => $faqs->map(function ($faq) {
+                    return [
+                        'id' => $faq->id,
+                        'title' => $faq->title,
+                        'description' => $faq->description,
+                        'order' => $faq->order,
+                    ];
+                }),
+                'booking' => [
+                    'title' => $booking?->title,
+                    'description' => $booking?->description,
+                    'btn_name' => $booking?->btn_name,
+                    'btn_link' => $booking?->btn_link,
+                ],
+            ];
+
             return response()->json([
                 'success' => true,
-                'data' => [
-                    'plans' => $formattedPlans,
-                    'tables' => $tables->map(function ($table) {
-                        return [
-                            'id' => $table->id,
-                            'title' => $table->title,
-                            'contents' => $table->contents->map(function ($content) {
-                                return [
-                                    'id' => $content->id,
-                                    'service_name' => $content->service_name,
-                                    'description' => $content->description,
-                                    'is_safety' => $content->is_safety,
-                                ];
-                            }),
-                        ];
-                    }),
-                    'faqs' => $faqs->map(function ($faq) {
-                        return [
-                            'id' => $faq->id,
-                            'title' => $faq->title,
-                            'description' => $faq->description,
-                            'order' => $faq->order,
-                        ];
-                    }),
-                    'booking' => [
-                        'title' => $booking?->title,
-                        'description' => $booking?->description,
-                        'btn_name' => $booking?->btn_name,
-                        'btn_link' => $booking?->btn_link,
-                    ],
-                ]
+                'data' => $this->roundNumbers($data),
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -282,27 +311,29 @@ class WebsiteController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->get();
 
+            $data = [
+                'articles' => $articles->map(function ($article) {
+                    return [
+                        'id' => $article->id,
+                        'title' => $article->title,
+                        'description' => $article->description,
+                        'featured_image' => $this->storageUrl($article->featured_image),
+                        'custom_date' => $article->custom_date?->format('Y-m-d'),
+                        'content' => $article->content,
+                        'images' => $article->images->map(function ($image) {
+                            return [
+                                'id' => $image->id,
+                                'image_url' => $this->storageUrl($image->image_path),
+                                'alt_text' => $image->alt_text,
+                            ];
+                        }),
+                    ];
+                }),
+            ];
+
             return response()->json([
                 'success' => true,
-                'data' => [
-                    'articles' => $articles->map(function ($article) {
-                        return [
-                            'id' => $article->id,
-                            'title' => $article->title,
-                            'description' => $article->description,
-                            'featured_image' => $this->storageUrl($article->featured_image),
-                            'custom_date' => $article->custom_date?->format('Y-m-d'),
-                            'content' => $article->content,
-                            'images' => $article->images->map(function ($image) {
-                                return [
-                                    'id' => $image->id,
-                                    'image_url' => $this->storageUrl($image->image_path),
-                                    'alt_text' => $image->alt_text,
-                                ];
-                            }),
-                        ];
-                    }),
-                ]
+                'data' => $this->roundNumbers($data),
             ]);
         } catch (\Exception $e) {
             return response()->json([
