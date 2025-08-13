@@ -16,6 +16,11 @@ class PricingPlan extends Model
         'is_customizable',
         'is_best_value',
         'order',
+        'button_link',
+        'button_text',
+        'highlighted_text',
+        'button_bg_color',
+        'total_value_bg_color',
     ];
 
     protected $casts = [
@@ -45,7 +50,7 @@ class PricingPlan extends Model
     }
     public function customFeatures()
     {
-        return $this->belongsToMany(CustomPlanFeature::class)
+        return $this->belongsToMany(CustomPlanFeature::class,'custom_feature_pricing_plan')
                     ->withTimestamps()
                     ->orderBy('name');
     }

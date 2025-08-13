@@ -17,7 +17,7 @@ class CustomPlanFeature extends Model
     ];
     public function plans()
     {
-        return $this->belongsToMany(PricingPlan::class)
+        return $this->belongsToMany(PricingPlan::class,'custom_feature_pricing_plan')
                     ->withTimestamps();
     }
 }

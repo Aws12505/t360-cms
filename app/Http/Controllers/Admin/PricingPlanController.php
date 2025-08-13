@@ -1,10 +1,10 @@
 <?php
-
 // app/Http/Controllers/Admin/PricingPlanController.php
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\PricingPlan;
+use App\Models\CustomPlanFeature;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -22,7 +22,9 @@ class PricingPlanController extends Controller
 
     public function create()
     {
-        return Inertia::render('Admin/PricingPlans/Create');
+        return Inertia::render('Admin/PricingPlans/Create', [
+            'allFeatures' => CustomPlanFeature::orderBy('name')->get(),
+        ]);
     }
 
     public function store(Request $request)
@@ -38,17 +40,20 @@ class PricingPlanController extends Controller
             'order'           => 'integer|min:0',
             'feature_ids'     => 'array',
             'feature_ids.*'   => 'exists:custom_plan_features,id',
+            'button_link'     => 'nullable|string|max:500',
+            'button_text'     => 'nullable|string|max:100',
+            'highlighted_text' => 'nullable|string',
+            'button_bg_color' => 'nullable|string|regex:/^#[0-9A-F]{6}$/i',
+            'total_value_bg_color' => 'nullable|string|regex:/^#[0-9A-F]{6}$/i',
         ]);
 
-        /*  ⬇ if NOT customizable -> total_value IS required */
         if (!($validated['is_customizable'] ?? false)) {
             $request->validate(['total_value' => 'required|numeric|min:0']);
         } else {
-            $validated['total_value'] = null;     // enforce rule
+            $validated['total_value'] = null;
             $validated['per_text']    = null;
         }
 
-        /** keep single "best value" */
         if ($validated['is_best_value'] ?? false) {
             PricingPlan::where('is_best_value', true)->update(['is_best_value' => false]);
         }
@@ -63,7 +68,8 @@ class PricingPlanController extends Controller
     public function edit(PricingPlan $pricingPlan)
     {
         return Inertia::render('Admin/PricingPlans/Edit', [
-            'plan' => $pricingPlan,
+            'plan' => $pricingPlan->load('customFeatures'),
+            'allFeatures' => CustomPlanFeature::orderBy('name')->get(),
         ]);
     }
 
@@ -80,6 +86,11 @@ class PricingPlanController extends Controller
             'order'           => 'integer|min:0',
             'feature_ids'     => 'array',
             'feature_ids.*'   => 'exists:custom_plan_features,id',
+            'button_link'     => 'nullable|string|max:500',
+            'button_text'     => 'nullable|string|max:100',
+            'highlighted_text' => 'nullable|string',
+            'button_bg_color' => 'nullable|string|regex:/^#[0-9A-F]{6}$/i',
+            'total_value_bg_color' => 'nullable|string|regex:/^#[0-9A-F]{6}$/i',
         ]);
 
         if (!($validated['is_customizable'] ?? false)) {

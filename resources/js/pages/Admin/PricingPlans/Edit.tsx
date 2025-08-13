@@ -26,6 +26,11 @@ interface PlanPayload {
   is_best_value: boolean;
   order: number;
   custom_features?: Feature[] | null;
+  button_link: string | null;
+  button_text: string | null;
+  highlighted_text: string | null;
+  button_bg_color: string | null;
+  total_value_bg_color: string | null;
 }
 
 interface Props {
@@ -54,6 +59,11 @@ export default function PricingPlanEdit({ plan, allFeatures }: Props) {
     is_best_value:   plan.is_best_value,
     order:           plan.order,
     feature_ids:     attachedIds,
+    button_link:     plan.button_link ?? '',
+    button_text:     plan.button_text ?? '',
+    highlighted_text: plan.highlighted_text ?? '',
+    button_bg_color: plan.button_bg_color ?? '#3B82F6',
+    total_value_bg_color: plan.total_value_bg_color ?? '#F3F4F6',
   });
 
   const toggleFeature = (id: number, checked: boolean) => {
@@ -112,6 +122,72 @@ export default function PricingPlanEdit({ plan, allFeatures }: Props) {
               </div>
             )}
 
+            {/* Color fields */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex flex-col gap-2">
+                <Label>Total Value Background Color</Label>
+                <div className="flex gap-2 items-center">
+                  <Input
+                    type="color"
+                    value={data.total_value_bg_color}
+                    onChange={e => setData('total_value_bg_color', e.target.value)}
+                    className="w-16 h-10 p-1 border rounded cursor-pointer"
+                  />
+                  <Input
+                    type="text"
+                    value={data.total_value_bg_color}
+                    onChange={e => setData('total_value_bg_color', e.target.value)}
+                    placeholder="#F3F4F6"
+                    className="flex-1"
+                  />
+                </div>
+                {errors.total_value_bg_color && <p className="text-sm text-red-500">{errors.total_value_bg_color}</p>}
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>Button Background Color</Label>
+                <div className="flex gap-2 items-center">
+                  <Input
+                    type="color"
+                    value={data.button_bg_color}
+                    onChange={e => setData('button_bg_color', e.target.value)}
+                    className="w-16 h-10 p-1 border rounded cursor-pointer"
+                  />
+                  <Input
+                    type="text"
+                    value={data.button_bg_color}
+                    onChange={e => setData('button_bg_color', e.target.value)}
+                    placeholder="#3B82F6"
+                    className="flex-1"
+                  />
+                </div>
+                {errors.button_bg_color && <p className="text-sm text-red-500">{errors.button_bg_color}</p>}
+              </div>
+            </div>
+
+            {/* Button fields */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex flex-col gap-2">
+                <Label>Button Text</Label>
+                <Input
+                  value={data.button_text}
+                  onChange={e => setData('button_text', e.target.value)}
+                  placeholder="Get Started"
+                />
+                {errors.button_text && <p className="text-sm text-red-500">{errors.button_text}</p>}
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>Button Link</Label>
+                <Input
+                  value={data.button_link}
+                  onChange={e => setData('button_link', e.target.value)}
+                  placeholder="https://example.com/signup"
+                />
+                {errors.button_link && <p className="text-sm text-red-500">{errors.button_link}</p>}
+              </div>
+            </div>
+
             {/* Description */}
             <div className="flex flex-col gap-2">
               <Label>Description</Label>
@@ -120,6 +196,16 @@ export default function PricingPlanEdit({ plan, allFeatures }: Props) {
                 onChange={html => setData('description', html)}
               />
               {errors.description && <p className="text-sm text-red-500">{errors.description}</p>}
+            </div>
+
+            {/* Highlighted Text */}
+            <div className="flex flex-col gap-2">
+              <Label>Highlighted Text (HTML)</Label>
+              <QuillEditor
+                value={data.highlighted_text}
+                onChange={html => setData('highlighted_text', html)}
+              />
+              {errors.highlighted_text && <p className="text-sm text-red-500">{errors.highlighted_text}</p>}
             </div>
 
             {/* Summary */}
