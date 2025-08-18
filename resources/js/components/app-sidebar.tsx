@@ -23,81 +23,30 @@ import {
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
-    {
-        title: 'Header',
-        href: '/admin/header',
-        icon: LayoutPanelTop,
-    },
-    {
-        title: 'Footer',
-        href: '/admin/footer',
-        icon: LayoutPanelTop,
-    },
-    {
-        title: 'Hero',
-        href: '/admin/hero',
-        icon: Image,
-    },
-    {
-        title: 'Video',
-        href: '/admin/video',
-        icon: Video,
-    },
-    {
-        title: 'Sliders',
-        href: '/admin/sliders',
-        icon: Images,
-    },
-    {
-        title: 'Faqs',
-        href: '/admin/faqs',
-        icon: HelpCircle,
-    },
-    {
-        title: 'Meeting',
-        href: '/admin/meeting',
-        icon: CalendarClock,
-    },
-    {
-        title: 'Form',
-        href: '/admin/form-section',
-        icon: FileText,
-    },
-    {
-        title: 'Pricing Plans',
-        href: '/admin/pricing-plans',
-        icon: Tags,
-    },
-    {
-        title: 'Pricing Plans Features',
-        href: '/admin/custom-features',
-        icon: ListChecks,
-    },
-    {
-        title: 'Pricing Tables',
-        href: '/admin/pricing-tables',
-        icon: Table,
-    },
-    {
-        title: 'Articles',
-        href: '/admin/articles',
-        icon: FileTextIcon,
-    },
-    {
-        title: 'Our Mission',
-        href: '/admin/mission',
-        icon: Target,
-    },
-    {
-        title: 'President Showcase',
-        href: '/admin/president-showcase',
-        icon: Users,
-    },
-    {
-        title: 'Dashboard360',
-        href: '/admin/dashboard360',
-        icon: Gauge,
-    }
+  //Global
+  { title: 'Header', href: '/admin/header', icon: LayoutPanelTop, group: 'Global'},
+  { title: 'Footer', href: '/admin/footer', icon: LayoutPanelTop, group: 'Global'},
+  { title: 'FAQs', href: '/admin/faqs', icon: HelpCircle, group: 'Global'},
+
+  // Home Page
+  { title: 'Hero', href: '/admin/hero', icon: Image, group: 'Home Page' },
+  { title: 'Video', href: '/admin/video', icon: Video, group: 'Home Page' },
+  { title: 'Sliders', href: '/admin/sliders', icon: Images, group: 'Home Page' },
+  { title: 'Meeting', href: '/admin/meeting', icon: CalendarClock, group: 'Home Page' },
+  { title: 'Form', href: '/admin/form-section', icon: FileText, group: 'Home Page' },
+
+  // Pricing Page
+  { title: 'Pricing Plans', href: '/admin/pricing-plans', icon: Tags, group: 'Pricing Page' },
+  { title: 'Pricing Plans Features', href: '/admin/custom-features', icon: ListChecks, group: 'Pricing Page' },
+  { title: 'Pricing Tables', href: '/admin/pricing-tables', icon: Table, group: 'Pricing Page' },
+
+  // Newsletter
+  { title: 'Articles', href: '/admin/articles', icon: FileTextIcon, group: 'Newsletter' },
+
+  // T360
+  { title: 'Our Mission', href: '/admin/mission', icon: Target, group: 'T360' },
+  { title: 'President Showcase', href: '/admin/president-showcase', icon: Users, group: 'T360' },
+  { title: 'Dashboard360', href: '/admin/dashboard360', icon: Gauge, group: 'T360' },
 ];
 
 const footerNavItems: NavItem[] = [
