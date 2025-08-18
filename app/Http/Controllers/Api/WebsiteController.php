@@ -343,4 +343,56 @@ class WebsiteController extends Controller
             ], 500);
         }
     }
+    public function whyT360()
+{
+    try {
+        $mission = \App\Models\Mission::instance();
+        $presidentShowcase = \App\Models\PresidentShowcase::instance();
+        $faqs = \App\Models\Faq::forPage('why-t360')->ordered()->get();
+
+        $data = [
+            'mission' => $this->transformMedia($mission ? $mission->toArray() : null),
+            'president_showcase' => $this->transformMedia($presidentShowcase ? $presidentShowcase->toArray() : null),
+            'faqs' => $faqs->map(function($faq) {
+                return [
+                    'id' => $faq->id,
+                    'title' => $faq->title,
+                    'description' => $faq->description,
+                    'order' => $faq->order,
+                ];
+            }),
+        ];
+
+        return response()->json([
+            'success' => true,
+            'data' => $this->roundNumbers($data),
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to fetch Why T360 data',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+public function dashboard360()
+{
+    try {
+        $dashboard360 = \App\Models\Dashboard360::instance();
+
+        $data = $this->transformMedia($dashboard360 ? $dashboard360->toArray() : null);
+
+        return response()->json([
+            'success' => true,
+            'data' => $this->roundNumbers($data),
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to fetch Dashboard360 data',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
 }

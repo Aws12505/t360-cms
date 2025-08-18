@@ -72,6 +72,7 @@ export default function FaqEdit({ faq }: Props) {
                 <SelectContent>
                   <SelectItem value="home">Home Page</SelectItem>
                   <SelectItem value="pricing">Pricing Page</SelectItem>
+                  <SelectItem value="why-t360">Why T360?</SelectItem>
                 </SelectContent>
               </Select>
               {errors.page && <p className="text-sm text-red-500">{errors.page}</p>}

@@ -16,6 +16,9 @@ use App\Http\Controllers\Admin\PricingTableController;
 use App\Http\Controllers\Admin\PricingBookingController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\ArticleImageController;
+use App\Http\Controllers\Admin\MissionController;
+use App\Http\Controllers\Admin\PresidentShowcaseController;
+use App\Http\Controllers\Admin\Dashboard360Controller;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
@@ -24,7 +27,6 @@ Route::get('/', function () {
     }
     return redirect()->route('login');
 })->name('home');
-
 
 Route::middleware(['auth'])
     ->prefix('admin')
@@ -58,6 +60,12 @@ Route::middleware(['auth'])
         Route::resource('articles', ArticleController::class);
         Route::delete('article-images/{articleImage}', [ArticleImageController::class,'destroy'])
               ->name('article-images.destroy');
+        Route::get('/mission', [MissionController::class, 'edit'])->name('mission.edit');
+        Route::put('/mission', [MissionController::class, 'update'])->name('mission.update');
+        Route::get('/president-showcase', [PresidentShowcaseController::class, 'edit'])->name('president-showcase.edit');
+        Route::put('/president-showcase', [PresidentShowcaseController::class, 'update'])->name('president-showcase.update');
+        Route::get('/dashboard360', [Dashboard360Controller::class, 'edit'])->name('dashboard360.edit');
+        Route::put('/dashboard360', [Dashboard360Controller::class, 'update'])->name('dashboard360.update');
     });
 
 require __DIR__.'/settings.php';

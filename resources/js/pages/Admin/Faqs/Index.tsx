@@ -57,6 +57,7 @@ export default function FaqsIndex({ faqs, currentPage }: Props) {
             <TabsList className="mb-6">
               <TabsTrigger value="home">Home Page</TabsTrigger>
               <TabsTrigger value="pricing">Pricing Page</TabsTrigger>
+              <TabsTrigger value="why-t360">Why T360?</TabsTrigger>
             </TabsList>
 
             <TabsContent value={currentPage}>

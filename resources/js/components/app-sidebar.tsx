@@ -4,69 +4,99 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+import {
+  LayoutPanelTop,   // for Header
+  Image,             // for Hero
+  Video,             // for Video
+  Images,            // for Sliders
+  HelpCircle,        // for Faqs
+  CalendarClock,     // for Meeting
+  FileText,          // for Form Section
+  Tags,              // for Pricing Plans
+  ListChecks,        // for Pricing Plans Features
+  Table,             // for Pricing Tables
+  FileTextIcon,      // for Articles
+  Target,            // for Our Mission
+  Users,             // for President Showcase
+  Gauge,             // for Dashboard360
+} from "lucide-react";
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Header',
         href: '/admin/header',
-        icon: LayoutGrid,
+        icon: LayoutPanelTop,
     },
     {
         title: 'Footer',
         href: '/admin/footer',
-        icon: LayoutGrid,
+        icon: LayoutPanelTop,
     },
     {
         title: 'Hero',
         href: '/admin/hero',
-        icon: LayoutGrid,
+        icon: Image,
     },
     {
         title: 'Video',
         href: '/admin/video',
-        icon: LayoutGrid,
+        icon: Video,
     },
     {
         title: 'Sliders',
         href: '/admin/sliders',
-        icon: LayoutGrid,
+        icon: Images,
     },
     {
         title: 'Faqs',
         href: '/admin/faqs',
-        icon: LayoutGrid,
+        icon: HelpCircle,
     },
     {
         title: 'Meeting',
         href: '/admin/meeting',
-        icon: LayoutGrid,
+        icon: CalendarClock,
     },
     {
         title: 'Form',
         href: '/admin/form-section',
-        icon: LayoutGrid,
+        icon: FileText,
     },
     {
         title: 'Pricing Plans',
         href: '/admin/pricing-plans',
-        icon: LayoutGrid,
+        icon: Tags,
     },
     {
         title: 'Pricing Plans Features',
         href: '/admin/custom-features',
-        icon: LayoutGrid,
+        icon: ListChecks,
     },
     {
         title: 'Pricing Tables',
         href: '/admin/pricing-tables',
-        icon: LayoutGrid,
+        icon: Table,
     },
     {
         title: 'Articles',
         href: '/admin/articles',
-        icon: LayoutGrid,
+        icon: FileTextIcon,
+    },
+    {
+        title: 'Our Mission',
+        href: '/admin/mission',
+        icon: Target,
+    },
+    {
+        title: 'President Showcase',
+        href: '/admin/president-showcase',
+        icon: Users,
+    },
+    {
+        title: 'Dashboard360',
+        href: '/admin/dashboard360',
+        icon: Gauge,
     }
 ];
 

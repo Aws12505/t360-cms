@@ -22,4 +22,10 @@ Route::prefix('v1')->group(function () {
     // Newsletter data
     Route::get('/newsletter', [WebsiteController::class, 'newsletter']);
     
+    //Why T360?
+    Route::get('/why-t360', [WebsiteController::class, 'whyT360']);
+
+    //Dashboard360
+    Route::get('/dashboard360', [WebsiteController::class, 'dashboard360']);
 });
+
