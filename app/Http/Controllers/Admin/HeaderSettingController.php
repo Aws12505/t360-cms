@@ -23,7 +23,7 @@ class HeaderSettingController extends Controller
 {
     $validated = $request->validate([
         'logo_image' => 'nullable|mimes:jpeg,png,jpg,gif,svg,ico|max:10240',
-        'favicon'    => 'nullable|image|max:1024',
+        'favicon'    => 'nullable|mimes:jpeg,png,jpg,gif,svg,ico|max:1024',
         'btn1_name'  => 'required|string|max:255',
         'btn1_link'  => 'required|string',
         'btn2_name'  => 'required|string|max:255',
