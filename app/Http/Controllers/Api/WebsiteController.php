@@ -349,6 +349,8 @@ class WebsiteController extends Controller
         $mission = \App\Models\Mission::instance();
         $presidentShowcase = \App\Models\PresidentShowcase::instance();
         $faqs = \App\Models\Faq::forPage('why-t360')->ordered()->get();
+        $whyChooseUs = \App\Models\WhyChooseUs::instance();
+        $whyChooseUsFeatures = \App\Models\WhyChooseUsFeature::ordered()->get();
 
         $data = [
             'mission' => $this->transformMedia($mission ? $mission->toArray() : null),
@@ -361,6 +363,20 @@ class WebsiteController extends Controller
                     'order' => $faq->order,
                 ];
             }),
+            'why_choose_us' => [
+                'title' => $whyChooseUs?->title,
+                'subtitle' => $whyChooseUs?->subtitle,
+                'description' => $whyChooseUs?->description,
+                'features' => $whyChooseUsFeatures->map(function($feature) {
+                    return [
+                        'id' => $feature->id,
+                        'title' => $feature->title,
+                        'description' => $feature->description,
+                        'icon' => $this->storageUrl($feature->icon),
+                        'order' => $feature->order,
+                    ];
+                }),
+            ],
         ];
 
         return response()->json([
