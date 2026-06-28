@@ -352,8 +352,14 @@ class WebsiteController extends Controller
         $whyChooseUs = \App\Models\WhyChooseUs::instance();
         $whyChooseUsFeatures = \App\Models\WhyChooseUsFeature::ordered()->get();
 
+        $missionArray = $this->transformMedia($mission?->toArray());
+        if ($missionArray && isset($missionArray['text'])) {
+            $missionArray['description'] = $missionArray['text'];
+            unset($missionArray['text']);
+        }
+
         $data = [
-            'mission' => $this->transformMedia($mission ? $mission->toArray() : null),
+            'mission' => $missionArray,
             'president_showcase' => $this->transformMedia($presidentShowcase ? $presidentShowcase->toArray() : null),
             'faqs' => $faqs->map(function($faq) {
                 return [
