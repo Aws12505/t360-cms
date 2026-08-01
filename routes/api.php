@@ -27,5 +27,8 @@ Route::prefix('v1')->group(function () {
 
     //Dashboard360
     Route::get('/dashboard360', [WebsiteController::class, 'dashboard360']);
+
+    //Beyond Hiring
+    Route::get('/beyond-hiring', [WebsiteController::class, 'beyondHiring']);
 });
 

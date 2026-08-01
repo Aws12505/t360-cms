@@ -416,5 +416,46 @@ public function dashboard360()
         ], 500);
     }
 }
+public function beyondHiring()
+{
+    try {
+        $beyondHiring = \App\Models\BeyondHiring::instance();
+        $faqs = \App\Models\Faq::forPage('beyond-hiring')->ordered()->get();
+
+        $data = [
+            'hero' => [
+                'title' => $beyondHiring?->hero_title,
+                'description' => $beyondHiring?->hero_description,
+                'btn_name' => $beyondHiring?->hero_btn_name,
+                'btn_link' => $beyondHiring?->hero_btn_link,
+            ],
+            'faqs' => $faqs->map(function($faq) {
+                return [
+                    'id' => $faq->id,
+                    'title' => $faq->title,
+                    'description' => $faq->description,
+                    'order' => $faq->order,
+                ];
+            }),
+            'cta' => [
+                'title' => $beyondHiring?->cta_title,
+                'description' => $beyondHiring?->cta_description,
+                'btn_name' => $beyondHiring?->cta_btn_name,
+                'btn_link' => $beyondHiring?->cta_btn_link,
+            ],
+        ];
+
+        return response()->json([
+            'success' => true,
+            'data' => $this->roundNumbers($data),
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to fetch Beyond Hiring data',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
 
 }

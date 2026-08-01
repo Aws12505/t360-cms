@@ -21,6 +21,7 @@ import {
   Gauge,             // for Dashboard360
   CheckCircle,       // for Why Choose Us
   Sparkles,          // for Why Choose Us Features
+  Handshake,         // for Beyond Hiring
 } from "lucide-react";
 import AppLogo from './app-logo';
 
@@ -51,6 +52,9 @@ const mainNavItems: NavItem[] = [
   { title: 'Dashboard360', href: '/admin/dashboard360', icon: Gauge, group: 'T360' },
   { title: 'Why Choose Us', href: '/admin/why-choose-us', icon: CheckCircle, group: 'T360' },
   { title: 'Why Choose Us Features', href: '/admin/why-choose-us-features', icon: Sparkles, group: 'T360' },
+
+  // Beyond Hiring
+  { title: 'Beyond Hiring', href: '/admin/beyond-hiring', icon: Handshake, group: 'Beyond Hiring' },
 ];
 
 const footerNavItems: NavItem[] = [

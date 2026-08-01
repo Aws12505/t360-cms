@@ -67,6 +67,7 @@ export default function FaqCreate({ selectedPage }: Props) {
                   <SelectItem value="home">Home Page</SelectItem>
                   <SelectItem value="pricing">Pricing Page</SelectItem>
                   <SelectItem value="why-t360">Why T360?</SelectItem>
+                  <SelectItem value="beyond-hiring">Beyond Hiring</SelectItem>
                 </SelectContent>
               </Select>
               {errors.page && <p className="text-sm text-red-500">{errors.page}</p>}

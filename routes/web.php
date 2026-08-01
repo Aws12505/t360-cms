@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\PresidentShowcaseController;
 use App\Http\Controllers\Admin\Dashboard360Controller;
 use App\Http\Controllers\Admin\WhyChooseUsController;
 use App\Http\Controllers\Admin\WhyChooseUsFeatureController;
+use App\Http\Controllers\Admin\BeyondHiringController;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
@@ -71,6 +72,8 @@ Route::middleware(['auth'])
         Route::get('/why-choose-us', [WhyChooseUsController::class, 'edit'])->name('why-choose-us.edit');
         Route::put('/why-choose-us', [WhyChooseUsController::class, 'update'])->name('why-choose-us.update');
         Route::resource('why-choose-us-features', WhyChooseUsFeatureController::class);
+        Route::get('/beyond-hiring', [BeyondHiringController::class, 'edit'])->name('beyond-hiring.edit');
+        Route::put('/beyond-hiring', [BeyondHiringController::class, 'update'])->name('beyond-hiring.update');
     });
 
 require __DIR__ . '/settings.php';
