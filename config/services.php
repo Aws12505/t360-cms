@@ -28,6 +28,16 @@ return [
         'key' => env('RESEND_KEY'),
     ],
 
+    // Public Next.js website (trucking360solutions.com)
+    'website' => [
+        'url' => env('WEBSITE_URL', 'https://trucking360solutions.com'),
+        // Shared secret the website server sends as X-T360-Key when posting applications
+        'key' => env('WEBSITE_API_KEY'),
+        // On-demand ISR revalidation endpoint on the website
+        'revalidate_url' => env('WEBSITE_REVALIDATE_URL'),
+        'revalidate_secret' => env('WEBSITE_REVALIDATE_SECRET'),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

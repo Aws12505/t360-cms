@@ -21,6 +21,8 @@ export interface NavItem {
     icon?: LucideIcon | null;
     isActive?: boolean;
     group: string;
+    /** Dotted path into shared page props holding a count to show as a badge, e.g. "hiring.unread" */
+    badgeKey?: string;
 }
 
 export interface SharedData {
@@ -29,6 +31,7 @@ export interface SharedData {
     auth: Auth;
     ziggy: Config & { location: string };
     sidebarOpen: boolean;
+    hiring?: { unread: number } | null;
     flash?: {
         success?: string;
         error?: string;

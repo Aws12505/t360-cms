@@ -59,6 +59,7 @@ export default function FaqsIndex({ faqs, currentPage }: Props) {
               <TabsTrigger value="pricing">Pricing Page</TabsTrigger>
               <TabsTrigger value="why-t360">Why T360?</TabsTrigger>
               <TabsTrigger value="beyond-hiring">Beyond Hiring</TabsTrigger>
+              <TabsTrigger value="drivers">Drivers</TabsTrigger>
             </TabsList>
 
             <TabsContent value={currentPage}>

@@ -51,6 +51,10 @@ class HandleInertiaRequests extends Middleware
                 'location' => $request->url(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            // Unread driver applications, shown as a badge in the sidebar
+            'hiring' => fn () => $request->user() ? [
+                'unread' => \App\Models\DriverApplication::whereNull('read_at')->count(),
+            ] : null,
             'flash' => [
             'success' => fn () => $request->session()->get('success'),
             'error' => fn () => $request->session()->get('error'),

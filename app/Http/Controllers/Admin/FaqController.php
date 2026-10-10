@@ -32,7 +32,7 @@ class FaqController extends Controller
         $validated = $request->validate([
             'title'       => 'required|string|max:255',
             'description' => 'required|string',
-            'page'        => 'required|in:home,pricing,why-t360,beyond-hiring',
+            'page'        => 'required|in:home,pricing,why-t360,beyond-hiring,drivers',
             'order'       => 'integer|min:0',
         ]);
 
@@ -55,7 +55,7 @@ class FaqController extends Controller
         $validated = $request->validate([
             'title'       => 'required|string|max:255',
             'description' => 'required|string',
-            'page'        => 'required|in:home,pricing,why-t360,beyond-hiring',
+            'page'        => 'required|in:home,pricing,why-t360,beyond-hiring,drivers',
             'order'       => 'integer|min:0',
         ]);
 

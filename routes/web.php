@@ -22,6 +22,11 @@ use App\Http\Controllers\Admin\Dashboard360Controller;
 use App\Http\Controllers\Admin\WhyChooseUsController;
 use App\Http\Controllers\Admin\WhyChooseUsFeatureController;
 use App\Http\Controllers\Admin\BeyondHiringController;
+use App\Http\Controllers\Admin\DriverPositionController;
+use App\Http\Controllers\Admin\DriverApplicationController;
+use App\Http\Controllers\Admin\DriversPageController;
+use App\Http\Controllers\Admin\HiringSettingController;
+use App\Http\Controllers\Admin\EditorUploadController;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
@@ -74,6 +79,28 @@ Route::middleware(['auth'])
         Route::resource('why-choose-us-features', WhyChooseUsFeatureController::class);
         Route::get('/beyond-hiring', [BeyondHiringController::class, 'edit'])->name('beyond-hiring.edit');
         Route::put('/beyond-hiring', [BeyondHiringController::class, 'update'])->name('beyond-hiring.update');
+
+        // Drivers (job openings)
+        Route::patch('driver-positions/{driverPosition}/status', [DriverPositionController::class, 'status'])->name('driver-positions.status');
+        Route::post('driver-positions/{driverPosition}/duplicate', [DriverPositionController::class, 'duplicate'])->name('driver-positions.duplicate');
+        Route::resource('driver-positions', DriverPositionController::class)->except('show');
+
+        Route::get('driver-applications/export', [DriverApplicationController::class, 'export'])->name('driver-applications.export');
+        Route::post('driver-applications/bulk-status', [DriverApplicationController::class, 'bulkStatus'])->name('driver-applications.bulk-status');
+        Route::patch('driver-applications/{driverApplication}/status', [DriverApplicationController::class, 'status'])->name('driver-applications.status');
+        Route::patch('driver-applications/{driverApplication}/unread', [DriverApplicationController::class, 'markUnread'])->name('driver-applications.unread');
+        Route::post('driver-applications/{driverApplication}/notes', [DriverApplicationController::class, 'storeNote'])->name('driver-applications.notes.store');
+        Route::delete('driver-application-notes/{note}', [DriverApplicationController::class, 'destroyNote'])->name('driver-application-notes.destroy');
+        Route::resource('driver-applications', DriverApplicationController::class)->only(['index', 'show', 'destroy']);
+
+        Route::get('/drivers-page', [DriversPageController::class, 'edit'])->name('drivers-page.edit');
+        Route::put('/drivers-page', [DriversPageController::class, 'update'])->name('drivers-page.update');
+        Route::get('/hiring-settings', [HiringSettingController::class, 'edit'])->name('hiring-settings.edit');
+        Route::put('/hiring-settings', [HiringSettingController::class, 'update'])->name('hiring-settings.update');
+        Route::post('/hiring-settings/test', [HiringSettingController::class, 'test'])->name('hiring-settings.test');
+
+        // Rich text editor image uploads
+        Route::post('editor-uploads', [EditorUploadController::class, 'store'])->name('editor-uploads.store');
     });
 
 require __DIR__ . '/settings.php';

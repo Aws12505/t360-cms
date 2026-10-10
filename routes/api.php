@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\WebsiteController;
+use App\Http\Controllers\Api\DriversController;
+use App\Http\Middleware\VerifyWebsiteKey;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -30,5 +32,11 @@ Route::prefix('v1')->group(function () {
 
     //Beyond Hiring
     Route::get('/beyond-hiring', [WebsiteController::class, 'beyondHiring']);
+
+    // Drivers (job openings)
+    Route::get('/drivers', [DriversController::class, 'index']);
+    Route::get('/drivers/positions/{slug}', [DriversController::class, 'show']);
+    Route::post('/driver-applications', [DriversController::class, 'apply'])
+        ->middleware([VerifyWebsiteKey::class, 'throttle:driver-applications']);
 });
 

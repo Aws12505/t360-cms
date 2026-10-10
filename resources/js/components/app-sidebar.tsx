@@ -22,10 +22,20 @@ import {
   CheckCircle,       // for Why Choose Us
   Sparkles,          // for Why Choose Us Features
   Handshake,         // for Beyond Hiring
+  Inbox,             // for Driver Applications
+  BriefcaseBusiness, // for Driver Positions
+  Truck,             // for Drivers Page
+  MailCheck,         // for Hiring Settings
 } from "lucide-react";
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
+  // Drivers (job openings)
+  { title: 'Applications', href: '/admin/driver-applications', icon: Inbox, group: 'Drivers', badgeKey: 'hiring.unread' },
+  { title: 'Positions', href: '/admin/driver-positions', icon: BriefcaseBusiness, group: 'Drivers' },
+  { title: 'Drivers Page', href: '/admin/drivers-page', icon: Truck, group: 'Drivers' },
+  { title: 'Hiring Settings', href: '/admin/hiring-settings', icon: MailCheck, group: 'Drivers' },
+
   //Global
   { title: 'Header', href: '/admin/header', icon: LayoutPanelTop, group: 'Global'},
   { title: 'Footer', href: '/admin/footer', icon: LayoutPanelTop, group: 'Global'},

@@ -1,6 +1,12 @@
-import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
+
+const badgeCount = (props: Record<string, unknown>, key?: string): number => {
+  if (!key) return 0;
+  const value = key.split('.').reduce<unknown>((obj, part) => (obj as Record<string, unknown> | null | undefined)?.[part], props);
+  return typeof value === 'number' ? value : 0;
+};
 
 export function NavMain({ items = [] }: { items: NavItem[] }) {
   const page = usePage();
@@ -31,6 +37,11 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                     <span>{item.title}</span>
                   </Link>
                 </SidebarMenuButton>
+                {badgeCount(page.props, item.badgeKey) > 0 && (
+                  <SidebarMenuBadge className="bg-red-600 text-white peer-hover/menu-button:text-white peer-data-[active=true]/menu-button:text-white">
+                    {badgeCount(page.props, item.badgeKey)}
+                  </SidebarMenuBadge>
+                )}
               </SidebarMenuItem>
             ))}
           </SidebarMenu>
