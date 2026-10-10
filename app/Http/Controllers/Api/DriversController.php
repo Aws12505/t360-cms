@@ -47,6 +47,8 @@ class DriversController extends Controller
         $pageData['feature_body'] = MediaUrl::absolutizeHtml($pageData['feature_body'] ?? null);
         $pageData['recruiter_phone'] = ($pageData['recruiter_phone'] ?? null) ?: $footer?->phone;
         $pageData['contact_email'] = $footer?->email;
+        $pageData['accept_general_applications'] = (bool) ($pageData['accept_general_applications'] ?? true);
+        $pageData['accepting_applications'] = $positions->isNotEmpty() || $pageData['accept_general_applications'];
         unset($pageData['singleton'], $pageData['id']);
 
         return response()->json([
@@ -121,6 +123,16 @@ class DriversController extends Controller
      */
     public function apply(Request $request)
     {
+        // No open positions and general applications switched off in the CMS
+        if (!DriversPage::acceptingApplications()) {
+            $page = DriversPage::instance();
+            return response()->json([
+                'success' => false,
+                'message' => $page?->closed_message ?: 'We are not accepting applications right now. Please check back soon.',
+                'errors' => ['applications' => [$page?->closed_message ?: 'We are not accepting applications right now.']],
+            ], 422);
+        }
+
         $data = $request->validate([
             'first_name'         => 'required|string|max:80',
             'last_name'          => 'required|string|max:80',

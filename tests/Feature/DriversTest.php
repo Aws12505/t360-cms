@@ -259,3 +259,28 @@ test('drivers page content can be updated', function () {
         ->and($page->trust_chips)->toBe(['Weekly pay'])
         ->and($page->why_items)->toHaveCount(1);
 });
+
+test('applications can be switched off when there are no open positions', function () {
+    Mail::fake();
+    \App\Models\DriversPage::instance()->update(['accept_general_applications' => false]);
+
+    // No openings + switched off: rejected, and the API tells the website
+    $this->getJson('/api/v1/drivers')
+        ->assertJsonPath('data.page.accepting_applications', false)
+        ->assertJsonPath('data.page.closed_message', fn ($m) => !empty($m));
+    $this->postJson('/api/v1/driver-applications', applicationPayload(), ['X-T360-Key' => 'test-key'])
+        ->assertStatus(422)
+        ->assertJsonValidationErrors('applications');
+    expect(DriverApplication::count())->toBe(0);
+
+    // Publishing a position opens applications again automatically
+    makePosition();
+    $this->getJson('/api/v1/drivers')->assertJsonPath('data.page.accepting_applications', true);
+    $this->postJson('/api/v1/driver-applications', applicationPayload(), ['X-T360-Key' => 'test-key'])->assertCreated();
+});
+
+test('general applications are accepted with no openings by default', function () {
+    Mail::fake();
+    $this->getJson('/api/v1/drivers')->assertJsonPath('data.page.accepting_applications', true);
+    $this->postJson('/api/v1/driver-applications', applicationPayload(), ['X-T360-Key' => 'test-key'])->assertCreated();
+});

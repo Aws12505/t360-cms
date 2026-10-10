@@ -37,6 +37,8 @@ class DriverPositionController extends Controller
                 'closed' => (int) ($counts['closed'] ?? 0),
             ],
             'websiteUrl' => rtrim(config('services.website.url'), '/'),
+            'acceptGeneral' => (bool) (\App\Models\DriversPage::instance()?->accept_general_applications ?? true),
+            'openCount' => DriverPosition::published()->count(),
         ]);
     }
 

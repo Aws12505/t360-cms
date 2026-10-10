@@ -1,6 +1,7 @@
 // resources/js/pages/Admin/Drivers/Page/Edit.tsx
 import { Head, useForm } from '@inertiajs/react';
 import { ExternalLink } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 import AppLayout from '@/layouts/app-layout';
 import FlashMessage from '@/components/flash-message';
 import QuillEditorAdvanced from '@/components/QuillEditorAdvanced';
@@ -15,7 +16,6 @@ type WhyItem = { icon: string; title: string; description: string };
 type Step = { title: string; description: string };
 
 interface PageData {
-  hero_eyebrow: string | null;
   hero_title: string;
   hero_subtitle: string | null;
   hero_image_url: string | null;
@@ -26,6 +26,8 @@ interface PageData {
   positions_title: string | null;
   positions_subtitle: string | null;
   empty_state: string | null;
+  accept_general_applications: boolean;
+  closed_message: string | null;
   why_title: string | null;
   why_subtitle: string | null;
   why_items: WhyItem[] | null;
@@ -70,7 +72,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function DriversPageEdit({ page, websiteUrl }: Props) {
   const { data, setData, post, processing, errors, transform, isDirty } = useForm({
-    hero_eyebrow: page.hero_eyebrow ?? '',
     hero_title: page.hero_title ?? '',
     hero_subtitle: page.hero_subtitle ?? '',
     hero_primary_btn: page.hero_primary_btn ?? '',
@@ -80,6 +81,8 @@ export default function DriversPageEdit({ page, websiteUrl }: Props) {
     positions_title: page.positions_title ?? '',
     positions_subtitle: page.positions_subtitle ?? '',
     empty_state: page.empty_state ?? '',
+    accept_general_applications: page.accept_general_applications ?? true,
+    closed_message: page.closed_message ?? '',
     why_title: page.why_title ?? '',
     why_subtitle: page.why_subtitle ?? '',
     why_items: (page.why_items ?? []) as WhyItem[],
@@ -134,7 +137,7 @@ export default function DriversPageEdit({ page, websiteUrl }: Props) {
         <Tabs defaultValue="hero" className="gap-6">
           <TabsList className="flex h-auto w-full flex-wrap justify-start">
             <TabsTrigger value="hero">Hero {tabError(['hero_', 'recruiter', 'trust']) && dot}</TabsTrigger>
-            <TabsTrigger value="positions">Positions {tabError(['positions_', 'empty']) && dot}</TabsTrigger>
+            <TabsTrigger value="positions">Positions {tabError(['positions_', 'empty', 'closed_', 'accept_']) && dot}</TabsTrigger>
             <TabsTrigger value="why">Why us {tabError(['why_']) && dot}</TabsTrigger>
             <TabsTrigger value="feature">Feature {tabError(['feature_']) && dot}</TabsTrigger>
             <TabsTrigger value="steps">How it works {tabError(['steps']) && dot}</TabsTrigger>
@@ -145,9 +148,6 @@ export default function DriversPageEdit({ page, websiteUrl }: Props) {
 
           <TabsContent value="hero" className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
             <Panel title="Hero" description="The first screen drivers see.">
-              <Field label="Eyebrow" htmlFor="hero_eyebrow" error={errors.hero_eyebrow} hint="Small badge above the headline.">
-                <Input id="hero_eyebrow" value={data.hero_eyebrow} onChange={(e) => setData('hero_eyebrow', e.target.value)} placeholder="Now hiring · CDL-A drivers" />
-              </Field>
               <Field label="Headline" htmlFor="hero_title" error={errors.hero_title} hint="Wrap words in *asterisks* to highlight them in red." counter={{ value: data.hero_title.length, max: 160, ideal: [10, 70] }}>
                 <Input id="hero_title" value={data.hero_title} onChange={(e) => setData('hero_title', e.target.value)} />
               </Field>
@@ -175,7 +175,7 @@ export default function DriversPageEdit({ page, websiteUrl }: Props) {
             </Panel>
           </TabsContent>
 
-          <TabsContent value="positions">
+          <TabsContent value="positions" className="space-y-6">
             <Panel title="Open positions section">
               <Field label="Section title" htmlFor="positions_title" error={errors.positions_title}>
                 <Input id="positions_title" value={data.positions_title} onChange={(e) => setData('positions_title', e.target.value)} />
@@ -183,9 +183,34 @@ export default function DriversPageEdit({ page, websiteUrl }: Props) {
               <Field label="Section subtitle" htmlFor="positions_subtitle" error={errors.positions_subtitle}>
                 <Textarea id="positions_subtitle" rows={2} value={data.positions_subtitle} onChange={(e) => setData('positions_subtitle', e.target.value)} />
               </Field>
-              <Field label="Message when there are no open positions" htmlFor="empty_state" error={errors.empty_state} hint="Drivers can still send a general application.">
-                <Textarea id="empty_state" rows={3} value={data.empty_state} onChange={(e) => setData('empty_state', e.target.value)} />
-              </Field>
+            </Panel>
+
+            <Panel title="When there are no open positions" description="Choose whether drivers can still apply while nothing is published.">
+              <label className="flex cursor-pointer items-start gap-3 rounded-lg border p-4 hover:bg-muted/40">
+                <Checkbox
+                  className="mt-0.5"
+                  checked={data.accept_general_applications}
+                  onCheckedChange={(v) => setData('accept_general_applications', v === true)}
+                />
+                <span className="text-sm">
+                  <span className="block font-medium">Accept applications when there are no openings</span>
+                  <span className="text-muted-foreground">
+                    {data.accept_general_applications
+                      ? 'On: drivers can fill out an application and you contact them when something opens up.'
+                      : 'Off: the application form and Apply buttons are hidden and nobody can submit until you publish a position.'}
+                  </span>
+                </span>
+              </label>
+              {data.accept_general_applications ? (
+                <Field label="Message shown (applications on)" htmlFor="empty_state" error={errors.empty_state} hint="Shown above an “Fill out an application” button.">
+                  <Textarea id="empty_state" rows={3} value={data.empty_state} onChange={(e) => setData('empty_state', e.target.value)} />
+                </Field>
+              ) : (
+                <Field label="Message shown (applications off)" htmlFor="closed_message" error={errors.closed_message} hint="No form or Apply button is shown.">
+                  <Textarea id="closed_message" rows={3} value={data.closed_message} onChange={(e) => setData('closed_message', e.target.value)} />
+                </Field>
+              )}
+              <p className="text-xs text-muted-foreground">As soon as at least one position is published, applications open automatically.</p>
             </Panel>
           </TabsContent>
 

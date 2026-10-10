@@ -30,7 +30,6 @@ class DriversPageController extends Controller
     public function update(Request $request)
     {
         $data = $request->validate([
-            'hero_eyebrow'       => 'nullable|string|max:120',
             'hero_title'         => 'required|string|max:160',
             'hero_subtitle'      => 'nullable|string|max:600',
             'hero_primary_btn'   => 'nullable|string|max:60',
@@ -42,6 +41,8 @@ class DriversPageController extends Controller
             'positions_title'    => 'nullable|string|max:160',
             'positions_subtitle' => 'nullable|string|max:600',
             'empty_state'        => 'nullable|string|max:1000',
+            'accept_general_applications' => 'boolean',
+            'closed_message'     => 'nullable|string|max:1000',
 
             'why_title'          => 'nullable|string|max:160',
             'why_subtitle'       => 'nullable|string|max:600',

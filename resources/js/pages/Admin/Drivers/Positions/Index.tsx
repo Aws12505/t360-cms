@@ -43,6 +43,8 @@ interface Props {
   currentStatus: string;
   counts: Record<'all' | PositionStatus, number>;
   websiteUrl: string;
+  acceptGeneral: boolean;
+  openCount: number;
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -56,7 +58,7 @@ const locationText = (locations: Position['locations']) => {
   return list.length > 2 ? `${list.slice(0, 2).join(' · ')} +${list.length - 2} more` : list.join(' · ');
 };
 
-export default function PositionsIndex({ positions, currentStatus, counts, websiteUrl }: Props) {
+export default function PositionsIndex({ positions, currentStatus, counts, websiteUrl, acceptGeneral, openCount }: Props) {
   const setStatus = (position: Position, status: PositionStatus) => {
     router.patch(route('admin.driver-positions.status', position.id), { status }, { preserveScroll: true });
   };
@@ -83,6 +85,20 @@ export default function PositionsIndex({ positions, currentStatus, counts, websi
             <Link href={route('admin.driver-positions.create')}><Plus /> New position</Link>
           </Button>
         </div>
+
+        {openCount === 0 && (
+          <div className={`flex flex-wrap items-center justify-between gap-3 rounded-xl border p-4 text-sm ${acceptGeneral ? 'border-blue-200 bg-blue-50 text-blue-900 dark:border-blue-500/30 dark:bg-blue-500/10 dark:text-blue-200' : 'border-amber-300 bg-amber-50 text-amber-900 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-200'}`}>
+            <p>
+              <strong>No open positions.</strong>{' '}
+              {acceptGeneral
+                ? 'The website tells drivers there are no openings but still lets them fill out an application.'
+                : 'Applications are switched off: the website shows a “no openings” message and nobody can apply.'}
+            </p>
+            <Button asChild variant="outline" size="sm">
+              <Link href={route('admin.drivers-page.edit')}>Change this</Link>
+            </Button>
+          </div>
+        )}
 
         <Tabs value={currentStatus} onValueChange={(status) => router.get(route('admin.driver-positions.index'), status === 'all' ? {} : { status }, { preserveState: true, preserveScroll: true })}>
           <TabsList>
